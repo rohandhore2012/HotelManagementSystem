@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${guest.id != null ? 'Edit Guest' : 'Add Guest'}">Guest Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/guest-form.css"/>
+</head>
+<body>
+<div class="form-container">
+  <div class="form-header">
+    <h1><i class="fas fa-user-edit"></i> <span th:text="${guest.id != null ? 'Edit Guest' : 'Add New Guest'}"></span></h1>
+    <a href="/guests" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Guest List
+    </a>
+  </div>
+
+  <form th:object="${guest}" method="post" class="guest-form"
+        th:action="${guest.id != null} ? @{/guests/update} : @{/guests}">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="form-grid">
+      <!-- Personal Info Section -->
+      <div class="form-section">
+        <h2><i class="fas fa-user-circle"></i> Guest Information</h2>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input type="text" id="name" th:field="*{name}" placeholder="Enter guest's full name" required/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="numberOfPeople">Number of Guests</label>
+          <div class="input-with-icon">
+            <i class="fas fa-users"></i>
+            <input type="number" id="numberOfPeople" th:field="*{numberOfPeople}" min="1" value="1" required />
+          </div>
+        </div>
+
+        <div class="form-group" id="descriptionBlock" style="display:none;">
+          <label for="description">Guest Details</label>
+          <div class="input-with-icon">
+            <i class="fas fa-info-circle"></i>
+            <textarea id="description" th:field="*{description}" rows="4"
+                      placeholder="Enter all guests' names and any special requirements"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Details Section -->
+      <div class="form-section">
+        <h2><i class="fas fa-calendar-alt"></i> Booking Details</h2>
+
+        <!-- Check-in Date -->
+        <div class="form-group">
+          <label for="checkInDate">Check-in Date</label>
+          <div class="input-with-icon">
+            <i class="fas fa-calendar-day"></i>
+            <input type="date" id="checkInDate" placeholder="dd/MM/yyyy" th:field="*{checkInDate}" required onchange="calculateCheckoutDate()" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="stayDays">Stay Duration (Days)</label>
+          <div class="input-with-icon">
+            <i class="fas fa-moon"></i>
+            <input type="number" id="stayDays" th:field="*{stayDays}" min="1" required
+                   oninput="calculateTotalCharge(); calculateCheckoutDate();" />
+          </div>
+        </div>
+
+        <!-- Check-out Date -->
+        <div class="form-group">
+          <label for="checkOutDate">Check-out Date</label>
+          <div class="input-with-icon">
+            <i class="fas fa-calendar-check"></i>
+            <input type="date" id="checkOutDate" placeholder="dd/MM/yyyy" th:field="*{checkOutDate}" readonly />
+          </div>
+        </div>
+      </div>
+
+      <!-- Room & Payment Section -->
+      <div class="form-section">
+        <h2><i class="fas fa-hotel"></i> Room & Payment</h2>
+        <div class="form-group">
+          <label for="room">Select Room</label>
+          <div class="input-with-icon">
+            <i class="fas fa-door-open"></i>
+            <select id="room" th:field="*{room}" required>
+              <option value="" disabled selected>Select a room</option>
+              <option th:each="room : ${availableRooms}"
+                      th:value="${room.roomNumber}"
+                      th:text="${room.roomNumber + ' - ' + room.roomType}"
+                      th:selected="${guest.room != null && guest.room.roomNumber == room.roomNumber}">
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ratePerDay">Rate per Day (₹)</label>
+          <div class="input-with-icon">
+            <i class="fas fa-rupee-sign"></i>
+            <input type="number" id="ratePerDay" th:field="*{ratePerDay}" required
+                   oninput="calculateTotalCharge()" step="0.01" min="0"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="totalCharge">Total Charge (₹)</label>
+          <div class="input-with-icon">
+            <i class="fas fa-calculator"></i>
+            <input type="number" id="totalCharge" th:field="*{totalCharge}" readonly />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="submit-btn">
+        <i class="fas fa-save"></i> Save Guest
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const guestInput = document.getElementById("numberOfPeople");
+    const descBlock = document.getElementById("descriptionBlock");
+
+    function toggleDescription() {
+      const num = parseInt(guestInput.value);
+      descBlock.style.display = (num > 1) ? "block" : "none";
+    }
+
+    guestInput.addEventListener("input", toggleDescription);
+    toggleDescription();
+
+    // Set minimum date to today for check-in
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("checkInDate").min = today;
+  });
+
+  function calculateTotalCharge() {
+    const rate = parseFloat(document.getElementById("ratePerDay").value) || 0;
+    const days = parseInt(document.getElementById("stayDays").value) || 0;
+    document.getElementById("totalCharge").value = (rate * days).toFixed(2);
+  }
+
+  function calculateCheckoutDate() {
+    const checkInInput = document.getElementById("checkInDate");
+    const stayDaysInput = document.getElementById("stayDays");
+    const checkOutInput = document.getElementById("checkOutDate");
+
+    const checkInDate = new Date(checkInInput.value);
+    const stayDays = parseInt(stayDaysInput.value);
+
+    if (checkInDate && !isNaN(stayDays)) {
+      const checkOutDate = new Date(checkInDate);
+      checkOutDate.setDate(checkOutDate.getDate() + stayDays);
+      checkOutInput.value = checkOutDate.toISOString().split("T")[0];
+    }
+  }
+   document.getElementById("stayDays").addEventListener("input", calculateCheckoutDate);
+</script>
+</body>
+</html>

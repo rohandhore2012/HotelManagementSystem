@@ -1,0 +1,240 @@
+/* ===== Base Styles ===== */
+:root {
+    --primary: #4361ee;
+    --primary-dark: #3a0ca3;
+    --accent: #4cc9f0;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --gray: #6c757d;
+    --light-gray: #e9ecef;
+    --success: #2ecc71;
+    --warning: #ffbe0b;
+    --danger: #e74c3c;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* ===== Content Styles ===== */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.content-header h1 {
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary, .btn-success, .btn-warning, .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background-color: var(--success);
+    color: var(--white);
+}
+
+.btn-warning {
+    background-color: var(--warning);
+    color: var(--dark);
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    color: var(--white);
+}
+
+/* ===== Alert Styles ===== */
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.alert-success, .alert-error {
+    padding: 15px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-success {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: var(--success);
+}
+
+.alert-error {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: var(--danger);
+}
+
+/* ===== Card & Table Styles ===== */
+.card {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.room-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.room-table thead {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.room-table th {
+    padding: 15px 20px;
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.room-table th i {
+    margin-right: 8px;
+}
+
+.room-table tbody tr {
+    border-bottom: 1px solid var(--light-gray);
+    transition: background-color 0.2s;
+}
+
+.room-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.room-table tbody tr:hover {
+    background-color: rgba(67, 97, 238, 0.05);
+}
+
+.room-table td {
+    padding: 15px 20px;
+    vertical-align: middle;
+}
+
+/* ===== Status Badges ===== */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.booked {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--danger);
+}
+
+.status-badge.available {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--success);
+}
+
+/* ===== Action Buttons ===== */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-buttons form {
+    display: inline;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 992px) {
+    .sidenav {
+        width: 200px;
+    }
+    .main-content {
+        margin-left: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-dashboard {
+        flex-direction: column;
+    }
+    .sidenav {
+        width: 100%;
+        position: relative;
+        height: auto;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .room-table td {
+        display: block;
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+    .room-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 20px;
+        width: calc(50% - 20px);
+        padding-right: 10px;
+        text-align: left;
+        font-weight: bold;
+        color: var(--primary-dark);
+    }
+    .room-table thead {
+        display: none;
+    }
+    .action-buttons {
+        justify-content: flex-end;
+    }
+}

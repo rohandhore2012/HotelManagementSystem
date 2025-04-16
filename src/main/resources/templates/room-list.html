@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Management | LuxuryStay PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/room-list.css}" />
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+<div class="admin-dashboard">
+    <!-- Sidebar -->
+    <div class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h3>LuxuryStay</h3>
+            <button id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="/" class="active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/guests">
+                <i class="fas fa-users"></i>
+                <span>Guest Management</span>
+            </a>
+            <a href="/rooms">
+                <i class="fas fa-door-open"></i>
+                <span>Room Management</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="content-header">
+            <h1><i class="fas fa-door-open"></i> Room Management</h1>
+            <a href="/rooms/new" class="btn-primary">
+                <i class="fas fa-plus"></i> Add New Room
+            </a>
+        </header>
+
+        <!-- Notification Alerts -->
+        <div class="alert-container">
+            <div th:if="${message}" class="alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${message}"></span>
+            </div>
+            <div th:if="${error}" class="alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+        </div>
+
+        <!-- Rooms Table -->
+        <div class="card">
+            <div class="table-responsive">
+                <table class="room-table">
+                    <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> Room Number</th>
+                        <th><i class="fas fa-star"></i> Type</th>
+                        <th><i class="fas fa-calendar-check"></i> Status</th>
+                        <th><i class="fas fa-cog"></i> Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="room : ${rooms}">
+                        <td th:text="${room.roomNumber}"></td>
+                        <td th:text="${room.roomType}"></td>
+                        <td>
+                                    <span class="status-badge"
+                                          th:classappend="${room.booked} ? 'booked' : 'available'">
+                                        <span th:text="${room.booked} ? 'Booked' : 'Available'"></span>
+                                    </span>
+                        </td>
+                        <td class="action-buttons">
+                            <a th:href="@{'/rooms/delete/' + ${room.roomNumber}}" class="btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+
+                            <span th:if="${room.booked}">
+                                        <form th:action="@{'/rooms/make-available/' + ${room.roomNumber}}" method="post">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                            <button type="submit" class="btn-warning">
+                                                <i class="fas fa-calendar-minus"></i> Make Available
+                                            </button>
+                                        </form>
+                                    </span>
+
+                            <span th:if="${!room.booked}">
+                                        <a th:href="@{'/guests/new?roomNumber=' + ${room.roomNumber}}" class="btn-success">
+                                            <i class="fas fa-calendar-plus"></i> Book Now
+                                        </a>
+                                    </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.dashboard-sidebar');
+      const toggleBtn = document.getElementById('sidebarToggle');
+
+      // Toggle sidebar
+      toggleBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('sidebar-collapsed');
+      });
+
+      // Auto-collapse on mobile
+      if (window.innerWidth <= 768) {
+        sidebar.classList.add('sidebar-collapsed');
+      }
+
+      // Update on resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+          sidebar.classList.add('sidebar-collapsed');
+        } else {
+          sidebar.classList.remove('sidebar-collapsed');
+        }
+      });
+    });
+</script>
+</body>
+</html>

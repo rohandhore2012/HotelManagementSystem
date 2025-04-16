@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LuxuryStay PRO | Hotel Management</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{index.css}">
+  <link rel="stylesheet" th:href="@{animations.css}">
+</head>
+<body>
+<div class="particles-container" id="particles-js"></div>
+<div class="glass-container">
+  <header class="dashboard-header">
+    <div class="logo-container">
+      <div class="logo-icon">
+        <i class="fas fa-hotel"></i>
+      </div>
+      <div class="logo-text">
+        <h1>Luxury<span>Stay</span> PRO</h1>
+        <p class="tagline">Ultimate Hotel Management Suite</p>
+      </div>
+    </div>
+    <div class="user-controls">
+      <div class="notification-bell">
+        <i class="fas fa-bell"></i>
+        <span class="notification-count">3</span>
+      </div>
+      </div>
+  </header>
+
+  <main class="dashboard-content">
+    <div class="hero-section">
+      <div class="welcome-message">
+        <h2>Welcome back, <span>Admin</span></h2>
+        <p>Manage your hotel operations with our premium suite</p>
+      </div>
+      <div class="quick-actions">
+        <a th:href="@{/guests/new}" class="primary-cta pulse-glow">
+          <i class="fas fa-calendar-check"></i>
+          <span>Book a Room</span>
+        </a>
+        <button class="secondary-cta">
+          <i class="fas fa-chart-line"></i>
+          <span>View Analytics</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="management-dashboard">
+      <h3 class="section-title">
+        <i class="fas fa-tachometer-alt"></i>
+        Management Dashboard
+      </h3>
+      <div class="dashboard-grid">
+        <a th:href="@{/rooms}" class="dashboard-card room-management">
+          <div class="card-icon">
+            <i class="fas fa-door-open"></i>
+          </div>
+          <div class="card-content">
+            <h4>Room Management</h4>
+            <p>Manage all room operations</p>
+            <div class="stats-badge">
+              <span>10 Rooms</span>
+            </div>
+          </div>
+          <div class="card-wave"></div>
+        </a>
+
+        <a th:href="@{/guests}" class="dashboard-card guest-management">
+          <div class="card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="card-content">
+            <h4>Guest Management</h4>
+            <p>Handle guest reservations</p>
+            <div class="stats-badge">
+              <span>3 Active</span>
+            </div>
+          </div>
+          <div class="card-wave"></div>
+        </a>
+
+        <div class="dashboard-card reports">
+          <div class="card-icon">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="card-content">
+            <h4>Revenue Reports</h4>
+            <p>View financial analytics</p>
+            <div class="stats-badge success">
+              <span>₹35k Today</span>
+            </div>
+          </div>
+          <div class="card-wave"></div>
+        </div>
+
+        <div class="dashboard-card staff">
+          <div class="card-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="card-content">
+            <h4>Staff Management</h4>
+            <p>Manage your team</p>
+            <div class="stats-badge">
+              <span>4 On Duty</span>
+            </div>
+          </div>
+          <div class="card-wave"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="dashboard-footer">
+    <p>© 2023 LuxuryStay PRO. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Contact Support</a>
+    </div>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

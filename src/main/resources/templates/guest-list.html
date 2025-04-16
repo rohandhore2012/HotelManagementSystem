@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guest Management | LuxuryStay</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/guest-list.css}" />
+  <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="dashboard-sidebar">
+  <div class="sidebar-header">
+    <h3>LuxuryStay</h3>
+    <button id="sidebarToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+  <div class="sidebar-menu">
+    <a href="/" class="active">
+      <i class="fas fa-tachometer-alt"></i>
+      <span>Dashboard</span>
+    </a>
+    <a href="/guests">
+      <i class="fas fa-users"></i>
+      <span>Guest Management</span>
+    </a>
+    <a href="/rooms">
+      <i class="fas fa-door-open"></i>
+      <span>Room Management</span>
+    </a>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <header class="content-header">
+    <h1><i class="fas fa-users"></i> Guest Management</h1>
+    <a href="/guests/new" class="primary-btn">
+      <i class="fas fa-user-plus"></i> Add Guest
+    </a>
+  </header>
+
+  <div class="search-container">
+    <form class="search-form" action="#" th:action="@{/guests/search}" method="get">
+      <input type="text"
+             class="search-input"
+             name="keyword"
+             placeholder="Search guests by name, room number, or description..."
+             th:value="${keyword}"/>
+      <button type="submit" class="search-btn">
+        <i class="fas fa-search"></i>
+        <span class="search-text">Search</span>
+      </button>
+    </form>
+  </div>
+
+    <div class="card">
+      <div class="table-responsive">
+        <table class="guest-table">
+          <thead>
+          <tr>
+            <th><i class="fas fa-user"></i> Name</th>
+            <th><i class="fas fa-user-friends"></i> People</th>
+            <th><i class="fas fa-info-circle"></i> Details</th>
+            <th><i class="fas fa-moon"></i> Stay Days</th>
+            <th><i class="fas fa-rupee-sign"></i> Rate/Day</th>
+            <th><i class="fas fa-calculator"></i> Total</th>
+            <th><i class="fas fa-hotel"></i> Room</th>
+            <th><i class="fas fa-cog"></i> Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="guest : ${guests}">
+            <td data-label="Name" th:text="${guest.name}"></td>
+            <td data-label="People" th:text="${guest.numberOfPeople}"></td>
+            <td data-label="Details" th:text="${guest.description ?: 'N/A'}"></td>
+            <td data-label="Stay Days" th:text="${guest.stayDays}"></td>
+            <td data-label="Rate/Day" th:text="${'₹' + guest.ratePerDay}"></td>
+            <td data-label="Total" th:text="${'₹' + guest.totalCharge}"></td>
+            <td data-label="Room">
+              <span class="room-badge" th:text="${guest.room != null ? guest.room.roomNumber : 'N/A'}"></span>
+            </td>
+            <td data-label="Actions" class="action-buttons">
+              <a th:href="@{'/guests/edit/' + ${guest.id}}" class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a th:href="@{'/guests/delete/' + ${guest.id}}" class="delete-btn">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.dashboard-sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    // Toggle sidebar
+    toggleBtn.addEventListener('click', function() {
+      sidebar.classList.toggle('sidebar-collapsed');
+    });
+
+    // Auto-collapse on mobile
+    if (window.innerWidth <= 768) {
+      sidebar.classList.add('sidebar-collapsed');
+    }
+
+    // Update on resize
+    window.addEventListener('resize', function() {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.add('sidebar-collapsed');
+      } else {
+        sidebar.classList.remove('sidebar-collapsed');
+      }
+    });
+  });
+
+  // Dynamic search input effects
+const searchInput = document.querySelector('.search-input');
+searchInput.addEventListener('focus', function() {
+  this.parentElement.classList.add('focused');
+});
+searchInput.addEventListener('blur', function() {
+  this.parentElement.classList.remove('focused');
+});
+
+// Hide search text on mobile
+function handleSearchText() {
+  const searchText = document.querySelector('.search-text');
+  if (window.innerWidth <= 480) {
+    searchText.style.display = 'none';
+  } else {
+    searchText.style.display = 'inline';
+  }
+}
+
+// Initial check
+handleSearchText();
+
+// Update on resize
+window.addEventListener('resize', handleSearchText);
+
+</script>
+</body>
+</html>
