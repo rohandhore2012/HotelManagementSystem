@@ -3,6 +3,8 @@
 
 *.java linguist-detectable=true
 *.html linguist-detectable=true
-*.css linguist-detectable=true
 *.js linguist-detectable=true
 *.properties linguist-detectable=true
+
+*.css linguist-language=CSS linguist-vendored
+
